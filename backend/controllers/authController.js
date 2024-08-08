@@ -44,14 +44,20 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
+    // Create payload with only user ID
     const payload = { user: { id: user.id } };
+
     jwt.sign(
       payload,
       process.env.JWT_SECRET,
       { expiresIn: "1h" },
       (err, token) => {
         if (err) throw err;
-        res.json({ token });
+
+        // Respond with  token
+        res.json({
+          token,
+        });
       }
     );
   } catch (err) {

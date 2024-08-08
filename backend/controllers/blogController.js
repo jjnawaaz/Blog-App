@@ -91,3 +91,22 @@ exports.deleteBlog = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+
+exports.getBlogsByUserId = async (req, res) => {
+  try {
+    // Find blogs created by the currently logged-in user
+    const blogs = await Blog.find({ author: req.user.id }).populate("author", [
+      "name",
+      "email",
+    ]);
+
+    if (!blogs.length) {
+      return res.status(404).json({ msg: "No blogs found for this user" });
+    }
+
+    res.json(blogs);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+};

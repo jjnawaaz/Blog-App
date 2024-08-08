@@ -30,17 +30,20 @@ const LoginSignUpPage = () => {
     registerName: "",
     registerEmail: "",
     registerPassword: "",
-    loginFormError: "", // To display login-specific errors
-    registerFormError: "", // To display registration-specific errors
+    loginFormError: "",
+    registerFormError: "",
   });
 
   const dispatch = useDispatch();
-  const { loading, userInfo, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const { loading, userInfo, error } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (userInfo) {
-      navigate("/");
+    if (userInfo && userInfo.token) {
+      localStorage.setItem("token", userInfo.token);
+      navigate(`/user`);
+    } else if (userInfo) {
+      console.error("Token is missing or userInfo is not set correctly");
     }
   }, [userInfo, navigate]);
 
@@ -84,7 +87,6 @@ const LoginSignUpPage = () => {
       isValid = false;
     } else {
       setErrors((prev) => ({ ...prev, registerEmail: "" }));
-      // Check if email exists
       const exists = await dispatch(checkUserExists(email));
       if (exists) {
         setErrors((prev) => ({
@@ -114,7 +116,7 @@ const LoginSignUpPage = () => {
       if (error) {
         setErrors((prev) => ({
           ...prev,
-          loginFormError: error, // Set login-specific error
+          loginFormError: error,
         }));
       }
     }
@@ -128,117 +130,129 @@ const LoginSignUpPage = () => {
       if (error) {
         setErrors((prev) => ({
           ...prev,
-          registerFormError: error, // Set registration-specific error
+          registerFormError: error,
         }));
       }
     }
   };
 
   return (
-    <Container maxWidth="lg">
-      <Grid container spacing={4} justifyContent="center">
-        <Grid item xs={12} sm={10} md={6} lg={5}>
-          <Paper elevation={3} sx={{ padding: 4 }}>
-            <Typography variant="h5" gutterBottom align="center">
-              Login
-            </Typography>
-            {errors.loginFormError && (
-              <Typography color="error" align="center">
-                {errors.loginFormError}
+    <Container
+      maxWidth="xl" // Use xl for larger container width
+      sx={{
+        minHeight: "100vh", // Full viewport height
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingTop: 4,
+        paddingBottom: 4,
+      }}
+    >
+      <Paper elevation={3} sx={{ padding: 4, width: "100%", maxWidth: 1400 }}>
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={6}>
+            <Paper elevation={3} sx={{ padding: 4 }}>
+              <Typography variant="h5" gutterBottom align="center">
+                Login
               </Typography>
-            )}
-            <form onSubmit={handleLoginSubmit}>
-              <TextField
-                label="Email"
-                name="email"
-                value={loginData.email}
-                onChange={handleLoginChange}
-                fullWidth
-                margin="normal"
-                error={!!errors.loginEmail}
-                helperText={errors.loginEmail}
-              />
-              <TextField
-                label="Password"
-                name="password"
-                type="password"
-                value={loginData.password}
-                onChange={handleLoginChange}
-                fullWidth
-                margin="normal"
-                error={!!errors.loginPassword}
-                helperText={errors.loginPassword}
-              />
-              <Box textAlign="center" mt={2}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  disabled={loading}
-                >
-                  {loading ? "Logging in..." : "Login"}
-                </Button>
-              </Box>
-            </form>
-          </Paper>
-        </Grid>
+              {errors.loginFormError && (
+                <Typography color="error" align="center">
+                  {errors.loginFormError}
+                </Typography>
+              )}
+              <form onSubmit={handleLoginSubmit}>
+                <TextField
+                  label="Email"
+                  name="email"
+                  value={loginData.email}
+                  onChange={handleLoginChange}
+                  fullWidth
+                  margin="normal"
+                  error={!!errors.loginEmail}
+                  helperText={errors.loginEmail}
+                />
+                <TextField
+                  label="Password"
+                  name="password"
+                  type="password"
+                  value={loginData.password}
+                  onChange={handleLoginChange}
+                  fullWidth
+                  margin="normal"
+                  error={!!errors.loginPassword}
+                  helperText={errors.loginPassword}
+                />
+                <Box textAlign="center" mt={2}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    disabled={loading}
+                  >
+                    {loading ? "Logging in..." : "Login"}
+                  </Button>
+                </Box>
+              </form>
+            </Paper>
+          </Grid>
 
-        <Grid item xs={12} sm={10} md={6} lg={5}>
-          <Paper elevation={3} sx={{ padding: 4 }}>
-            <Typography variant="h5" gutterBottom align="center">
-              Register
-            </Typography>
-            {errors.registerFormError && (
-              <Typography color="error" align="center">
-                {errors.registerFormError}
+          <Grid item xs={12} md={6}>
+            <Paper elevation={3} sx={{ padding: 4 }}>
+              <Typography variant="h5" gutterBottom align="center">
+                Register
               </Typography>
-            )}
-            <form onSubmit={handleRegisterSubmit}>
-              <TextField
-                label="Name"
-                name="name"
-                value={registerData.name}
-                onChange={handleRegisterChange}
-                fullWidth
-                margin="normal"
-                error={!!errors.registerName}
-                helperText={errors.registerName}
-              />
-              <TextField
-                label="Email"
-                name="email"
-                value={registerData.email}
-                onChange={handleRegisterChange}
-                fullWidth
-                margin="normal"
-                error={!!errors.registerEmail}
-                helperText={errors.registerEmail}
-              />
-              <TextField
-                label="Password"
-                name="password"
-                type="password"
-                value={registerData.password}
-                onChange={handleRegisterChange}
-                fullWidth
-                margin="normal"
-                error={!!errors.registerPassword}
-                helperText={errors.registerPassword}
-              />
-              <Box textAlign="center" mt={2}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="secondary"
-                  disabled={loading}
-                >
-                  {loading ? "Registering..." : "Register"}
-                </Button>
-              </Box>
-            </form>
-          </Paper>
+              {errors.registerFormError && (
+                <Typography color="error" align="center">
+                  {errors.registerFormError}
+                </Typography>
+              )}
+              <form onSubmit={handleRegisterSubmit}>
+                <TextField
+                  label="Name"
+                  name="name"
+                  value={registerData.name}
+                  onChange={handleRegisterChange}
+                  fullWidth
+                  margin="normal"
+                  error={!!errors.registerName}
+                  helperText={errors.registerName}
+                />
+                <TextField
+                  label="Email"
+                  name="email"
+                  value={registerData.email}
+                  onChange={handleRegisterChange}
+                  fullWidth
+                  margin="normal"
+                  error={!!errors.registerEmail}
+                  helperText={errors.registerEmail}
+                />
+                <TextField
+                  label="Password"
+                  name="password"
+                  type="password"
+                  value={registerData.password}
+                  onChange={handleRegisterChange}
+                  fullWidth
+                  margin="normal"
+                  error={!!errors.registerPassword}
+                  helperText={errors.registerPassword}
+                />
+                <Box textAlign="center" mt={2}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="secondary"
+                    disabled={loading}
+                  >
+                    {loading ? "Registering..." : "Register"}
+                  </Button>
+                </Box>
+              </form>
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
+      </Paper>
     </Container>
   );
 };

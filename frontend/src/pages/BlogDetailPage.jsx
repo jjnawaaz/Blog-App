@@ -32,7 +32,13 @@ const BlogDetailPage = () => {
   }
 
   if (!blog) {
-    return <Typography variant="h6">Blog not found</Typography>;
+    return (
+      <Container>
+        <Typography variant="h6" align="center" color="textSecondary">
+          Blog not found
+        </Typography>
+      </Container>
+    );
   }
 
   return (
@@ -41,14 +47,20 @@ const BlogDetailPage = () => {
         <Header />
         <Container>
           <Paper style={{ padding: "20px", marginTop: "20px" }}>
-            <Typography variant="h3" component="h1">
-              In Title: {blog.title}
+            <Typography variant="h3" component="h1" gutterBottom>
+              {blog.title}
             </Typography>
-            <Typography variant="subtitle1">
+            <Typography variant="subtitle1" color="textSecondary" gutterBottom>
               {blog.author ? blog.author.name : "Unknown Author"} |{" "}
               {new Date(blog.date).toLocaleDateString()}
             </Typography>
-            <div dangerouslySetInnerHTML={{ __html: blog.content }} />
+            <Typography
+              variant="body1"
+              component="div"
+              style={{ lineHeight: 1.6 }}
+            >
+              <div dangerouslySetInnerHTML={{ __html: blog.content }} />
+            </Typography>
           </Paper>
         </Container>
       </div>

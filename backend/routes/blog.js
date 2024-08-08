@@ -5,6 +5,7 @@ const {
   getBlogById,
   updateBlog,
   deleteBlog,
+  getBlogsByUserId,
 } = require("../controllers/blogController");
 const auth = require("../middlewares/auth");
 const router = express.Router();
@@ -13,6 +14,11 @@ const router = express.Router();
 // @desc   Create a blog
 // @access Private
 router.post("/", auth, createBlog);
+
+// @route   GET /api/blogs/user
+// @desc    Get all blogs for the logged-in user
+// @access  Private
+router.get("/user", auth, getBlogsByUserId);
 
 // @route  GET api/blogs
 // @desc   Get all blogs

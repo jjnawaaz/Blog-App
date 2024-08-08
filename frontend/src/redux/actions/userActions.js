@@ -66,3 +66,18 @@ export const logoutUser = () => (dispatch) => {
   localStorage.removeItem("userInfo");
   dispatch({ type: "USER_LOGOUT" });
 };
+
+export const fetchUserInfoFromToken = (token) => async (dispatch) => {
+  try {
+    const response = await fetch("/api/user/me", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    dispatch({ type: "SET_USER_INFO", payload: data });
+  } catch (error) {
+    console.error("Failed to fetch user info:", error);
+  }
+};

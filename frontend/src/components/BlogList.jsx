@@ -1,13 +1,10 @@
-// src/components/BlogList.js
 import React from "react";
 import BlogCard from "./BlogCard";
 import { Grid, Container } from "@mui/material";
 
 const BlogList = ({ blogs }) => {
-  // const testBlogs = ["Junaid", "Nawaz"];
-
   return (
-    <Container>
+    <Container maxWidth="lg">
       <Grid container spacing={3}>
         {blogs.map((blog) => (
           <Grid item xs={12} sm={6} md={4} key={blog._id}>
