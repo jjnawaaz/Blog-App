@@ -1,0 +1,51 @@
+# Node.js dependencies
+/node_modules/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.*
+
+# Build output
+/dist/
+/build/
+
+# Dependency directories
+/bower_components/
+
+# IDEs and editors
+/.idea/
+/.vscode/
+/*.sublime-workspace
+/*.sublime-project
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+/coverage/
+
+# Misc
+*.tgz
+*.gz
+
+# Temporary files
+*.swp
+*.swo
+
+# Runtime files
+pids
+*.pid
+*.seed
+
+# Others
+*.sqlite
+*.db
+*.sqlite3
