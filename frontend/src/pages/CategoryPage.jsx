@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import BlogList from "../components/BlogList";
 import { fetchBlogsByCategory } from "../redux/actions/blogActions";
 import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
 import { useParams } from "react-router-dom";
 import { Container } from "@mui/material";
 

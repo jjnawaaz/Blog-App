@@ -1,12 +1,14 @@
-// src/redux/actions/blogActions.js
 import axios from "axios";
+
+// Base URL from environment variables
+const API_URL = import.meta.env.VITE_API_URL;
 
 // Fetch all blogs
 export const fetchBlogs = () => async (dispatch) => {
   dispatch({ type: "FETCH_BLOGS_REQUEST" });
 
   try {
-    const response = await fetch("http://127.0.0.1:3000/api/blogs/"); // Adjust to your API endpoint
+    const response = await fetch(`${API_URL}/api/blogs/`);
     const data = await response.json();
     dispatch({ type: "FETCH_BLOGS_SUCCESS", payload: data });
   } catch (error) {
@@ -17,8 +19,9 @@ export const fetchBlogs = () => async (dispatch) => {
 // Fetch blog by ID
 export const fetchBlogById = (id) => async (dispatch) => {
   dispatch({ type: "FETCH_BLOG_BY_ID_REQUEST" });
+
   try {
-    const response = await axios.get(`http://127.0.0.1:3000/api/blogs/${id}`);
+    const response = await axios.get(`${API_URL}/api/blogs/${id}`);
     dispatch({ type: "FETCH_BLOG_BY_ID_SUCCESS", payload: response.data });
   } catch (error) {
     dispatch({ type: "FETCH_BLOG_BY_ID_FAILURE" });
@@ -29,8 +32,11 @@ export const fetchBlogById = (id) => async (dispatch) => {
 // Fetch blogs by category
 export const fetchBlogsByCategory = (category) => async (dispatch) => {
   dispatch({ type: "FETCH_BLOGS_BY_CATEGORY_REQUEST" });
+
   try {
-    const response = await axios.get(`/api/blogs/category/${category}`);
+    const response = await axios.get(
+      `${API_URL}/api/blogs/category/${category}`
+    );
     dispatch({
       type: "FETCH_BLOGS_BY_CATEGORY_SUCCESS",
       payload: response.data,
@@ -60,7 +66,7 @@ export const fetchBlogsByUserId = () => async (dispatch) => {
     }
 
     // Make the API request with the token in the headers
-    const response = await axios.get(`http://127.0.0.1:3000/api/blogs/user`, {
+    const response = await axios.get(`${API_URL}/api/blogs/user`, {
       headers: {
         "x-auth-token": token, // Set the token in the headers
       },
@@ -89,7 +95,7 @@ export const createBlog = (blog) => async (dispatch) => {
     }
 
     // Make the API request with the token in the headers
-    const response = await axios.post("http://127.0.0.1:3000/api/blogs", blog, {
+    const response = await axios.post(`${API_URL}/api/blogs`, blog, {
       headers: {
         "x-auth-token": token, // Set the token in the headers
       },
@@ -118,15 +124,11 @@ export const updateBlog = (id, blog) => async (dispatch) => {
   }
 
   try {
-    const response = await axios.put(
-      `http://127.0.0.1:3000/api/blogs/${id}`,
-      blog,
-      {
-        headers: {
-          "x-auth-token": token, // Set the token in the headers
-        },
-      }
-    );
+    const response = await axios.put(`${API_URL}/api/blogs/${id}`, blog, {
+      headers: {
+        "x-auth-token": token, // Set the token in the headers
+      },
+    });
     dispatch({ type: "UPDATE_BLOG_SUCCESS", payload: response.data });
   } catch (error) {
     console.error(error);
@@ -147,11 +149,11 @@ export const deleteBlog = (id) => async (dispatch) => {
   if (!token) {
     throw new Error("No token found in user info");
   }
-  console.log("Inside delete action");
+
   try {
     dispatch({ type: "DELETE_BLOG_REQUEST" });
 
-    await axios.delete(`http://127.0.0.1:3000/api/blogs/${id}`, {
+    await axios.delete(`${API_URL}/api/blogs/${id}`, {
       headers: {
         "x-auth-token": token, // Set the token in the headers
       },

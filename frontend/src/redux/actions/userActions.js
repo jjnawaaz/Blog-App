@@ -1,10 +1,11 @@
 import axios from "axios";
-
+// Base URL from environment variables
+const API_URL = import.meta.env.VITE_API_URL;
 // Login User Action
 export const loginUser = (email, password) => async (dispatch) => {
   dispatch({ type: "USER_LOGIN_REQUEST" });
   try {
-    const response = await axios.post("http://127.0.0.1:3000/api/auth/login", {
+    const response = await axios.post(`${API_URL}/api/auth/login`, {
       email,
       password,
     });
@@ -25,14 +26,11 @@ export const loginUser = (email, password) => async (dispatch) => {
 export const registerUser = (name, email, password) => async (dispatch) => {
   dispatch({ type: "USER_REGISTER_REQUEST" });
   try {
-    const response = await axios.post(
-      "http://127.0.0.1:3000/api/auth/register",
-      {
-        name,
-        email,
-        password,
-      }
-    );
+    const response = await axios.post(`${API_URL}/api/auth/register`, {
+      name,
+      email,
+      password,
+    });
     dispatch({ type: "USER_REGISTER_SUCCESS", payload: response.data });
 
     // Automatically log in the user after registration
@@ -52,7 +50,7 @@ export const registerUser = (name, email, password) => async (dispatch) => {
 export const checkUserExists = (email) => async () => {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:3000/api/auth/checkUserExists?email=${email}`
+      `${API_URL}/api/auth/checkUserExists?email=${email}`
     );
     return response.data.exists; // Expecting { exists: true/false }
   } catch (error) {
